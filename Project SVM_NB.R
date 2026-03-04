@@ -1,9 +1,3 @@
-#Course: CS 513
-#First Name: Nishank
-#Last Name: Shetty
-#CWID: 20025517
-#Project Name:
-
 library(readr)
 library(class)
 library(ggplot2)
@@ -130,4 +124,5 @@ confusionMatrix(predictions, test_data$energy)
 
 rm(list = ls())
 dev.off()
+
 

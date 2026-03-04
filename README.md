@@ -1,205 +1,274 @@
-# Song Energy Classifier 🎵⚡
+# Spotify Song Energy Classifier 🎵⚡
 
-A machine learning project that classifies songs into **High Energy** or **Low Energy** categories using audio features derived from Spotify-style datasets.
+This project builds a machine learning system that classifies songs into **High Energy** or **Low Energy** categories using Spotify audio features.
 
-This project explores how musical characteristics such as **loudness, acousticness, tempo, speechiness, and valence** influence the perceived energy of a song. Multiple machine learning models were trained and compared to determine the most effective approach for energy classification.
+The goal of this project is to analyze musical attributes such as **loudness, tempo, speechiness, acousticness, and valence** and determine whether a song belongs to a high-energy category.
+
+Multiple machine learning models were implemented using **Python and R** and compared to evaluate their performance in predicting song energy levels.
 
 ---
 
-# Project Overview
+# Project Objective
 
-Music streaming services often categorize songs based on mood, activity, or listening context. One of the most important attributes used in playlist generation is **song energy**.
+Music streaming platforms organize songs into playlists based on mood and intensity (workout, party, study, relaxation, etc.).
 
-Energy levels can influence:
+One important attribute used in music recommendation systems is **song energy**, which measures the intensity and activity level of a track.
 
-- Workout playlists
-- Party or dance playlists
-- Study or relaxation playlists
-- Music recommendation systems
-
-However, determining energy levels manually is inefficient for large music libraries. This project builds a **machine learning pipeline that automatically predicts whether a song is high-energy or low-energy based on its audio features.**
+This project develops machine learning models that automatically classify songs based on their **audio characteristics**.
 
 ---
 
 # Dataset
 
-The dataset contains **30,000+ songs** with multiple audio features commonly used in music analytics.
+The dataset used is **spotify_songs.csv**, which contains thousands of songs with audio features extracted from Spotify.
 
-### Source
-Spotify-style dataset from Kaggle.
-
-### Data Split
-
-- Training Data: **80%**
-- Testing Data: **20%**
+These features describe the musical characteristics of each track and are used to train classification models.
 
 ---
 
 # Features Used
 
-The model focuses on five primary audio attributes:
+The following audio features were selected for modeling:
 
 | Feature | Description |
 |------|------|
 | Loudness | Overall volume level of the track |
-| Acousticness | Probability that the track is acoustic |
-| Tempo | Beats per minute of the song |
-| Speechiness | Amount of spoken words present |
+| Speechiness | Presence of spoken words in a song |
+| Tempo | Speed of the song (beats per minute) |
 | Valence | Musical positivity or emotional tone |
+| Acousticness | Likelihood that the track is acoustic |
+
+Target Variable:
+
+| Variable | Description |
+|------|------|
+| Energy | Intensity and activity level of a song |
+
+The energy variable was converted into a **binary classification problem**:
+
+```
+Energy < 0.65 → Low Energy (0)
+Energy ≥ 0.65 → High Energy (1)
+```
 
 ---
 
 # Data Preprocessing
 
-Several preprocessing steps were applied before training the models:
+The following preprocessing steps were applied before model training:
 
-1. Data cleaning and validation
-2. Handling missing values
-3. Feature normalization using **Min-Max Scaling**
-4. Feature selection to retain the most predictive attributes
+### Feature Selection
+Only relevant audio attributes were selected.
 
-Normalization ensures that all features are scaled between **0 and 1**, preventing any single feature from dominating the model.
+### Label Conversion
+Energy values were converted into binary classes.
 
----
+### Min-Max Normalization
 
-# Target Variable
+All features were normalized using Min-Max scaling:
 
-Songs were categorized using an **energy threshold of 0.7**.
+```
+(x - min(x)) / (max(x) - min(x))
+```
 
-Energy > 0.7 → High Energy  
-Energy ≤ 0.7 → Low Energy
+This ensures that all features are scaled between **0 and 1**.
 
-This converts the problem into a **binary classification task**.
+### Train-Test Split
+
+The dataset was divided into:
+
+- **80% Training Data**
+- **20% Testing Data**
 
 ---
 
 # Machine Learning Models
 
-The following classification algorithms were implemented and evaluated:
-
-### Logistic Regression
-A baseline linear model used for binary classification.
-
-### Random Forest
-An ensemble learning method that builds multiple decision trees and aggregates their predictions.
-
-### Support Vector Machine (SVM)
-A powerful classifier that finds the optimal boundary between classes.
-
-### Gaussian Naive Bayes
-A probabilistic classifier based on Bayes’ theorem assuming feature independence.
-
-### K-Nearest Neighbors (KNN)
-A distance-based algorithm that classifies songs based on the labels of their nearest neighbors.
+The project compares several classification algorithms.
 
 ---
 
-# Hyperparameter Tuning
+## Logistic Regression
 
-For the **KNN model**, hyperparameter tuning was performed using:
+Implemented in **Python using Scikit-Learn**.
 
-- Grid Search
-- 5-fold Cross Validation
-- K values tested from **1 to 10**
+Logistic Regression estimates the probability that a song belongs to a particular class.
 
-This helped identify the optimal number of neighbors for classification.
+Evaluation metrics include:
 
----
-
-# Model Performance
-
-| Model | Accuracy |
-|------|------|
-| Logistic Regression | 75.05% |
-| Random Forest | 77.37% |
-| Support Vector Machine | 79.07% |
-| Gaussian Naive Bayes | 74.36% |
-| **K-Nearest Neighbors (Best Model)** | **81.10%** |
+- Accuracy
+- Confusion Matrix
+- ROC Curve
+- AUC Score
 
 ---
 
-# Key Insights
+## Random Forest
 
-Several interesting observations emerged from the analysis:
+Implemented in **Python**.
 
-- **Loudness** was the most influential feature affecting energy classification.
-- Songs with **lower acousticness** often corresponded to higher energy levels.
-- **KNN performed best**, likely because songs with similar audio characteristics naturally cluster together.
-- Ensemble models like Random Forest also performed well but slightly underperformed compared to KNN.
+Random Forest is an ensemble algorithm that constructs multiple decision trees and aggregates their predictions.
+
+Advantages:
+
+- Handles nonlinear relationships
+- Reduces overfitting
+- Works well with structured data
 
 ---
 
-# Applications
+## Support Vector Machine (SVM)
 
-This model can be useful in multiple music technology applications:
+Implemented in **R using the e1071 library**.
 
-- Automated playlist generation
-- Music recommendation systems
-- Audio content tagging
-- Music discovery platforms
-- Mood-based music classification
+SVM identifies the optimal hyperplane that separates two classes with the maximum margin.
+
+---
+
+## Naive Bayes
+
+Implemented in **R using the naivebayes package**.
+
+Naive Bayes is a probabilistic classifier based on Bayes’ theorem with the assumption of feature independence.
+
+---
+
+## K-Nearest Neighbors (KNN)
+
+Implemented in **R using the class package**.
+
+KNN classifies songs based on the majority class among the nearest neighbors.
+
+Steps:
+
+1. Calculate distance between samples
+2. Identify the K nearest neighbors
+3. Assign the majority class
+
+---
+
+# Model Evaluation
+
+The models were evaluated using:
+
+- Accuracy
+- Confusion Matrix
+- Classification metrics
+- ROC Curve (Logistic Regression)
+
+These metrics help determine which algorithm performs best for song energy classification.
 
 ---
 
 # Project Structure
 
-song-energy-classifier
-
-data  
-└── dataset.csv  
-
-notebooks  
-└── exploratory_analysis.ipynb  
-
-src  
-├── train_model.py  
-├── evaluate_model.py  
-└── preprocessing.py  
-
-requirements.txt  
-README.md  
+```
+Song-Energy-Classifier
+│
+├── LR_RF.ipynb
+│   Logistic Regression and Random Forest implementation (Python)
+│
+├── Project SVM_NB.R
+│   Support Vector Machine and Naive Bayes implementation (R)
+│
+├── Song_Energy_Classifier.R
+│   Data preprocessing and K-Nearest Neighbors model (R)
+│
+├── Song_Energy_Classifer_Report.pdf
+│   Project report explaining methodology, analysis, and results
+│
+├── spotify_songs.csv
+│   Dataset used in the project
+│
+└── README.md
+```
 
 ---
 
 # Technologies Used
 
-- Python
-- Scikit-learn
+### Python
+
 - Pandas
-- NumPy
+- Scikit-Learn
 - Matplotlib
 - Seaborn
-- Jupyter Notebook
+
+### R
+
+- caret
+- class
+- e1071
+- naivebayes
+- ggplot2
 
 ---
 
-# Future Improvements
+# How to Run the Project
 
-Several improvements could enhance the system:
+### Python Models
 
-- Incorporating **deep learning models**
-- Expanding feature engineering
-- Using **larger and more diverse datasets**
-- Building a **real-time song energy prediction API**
-- Developing a **web interface for song classification**
+Run the Jupyter notebook:
+
+```
+LR_RF.ipynb
+```
+
+This notebook trains:
+
+- Logistic Regression
+- Random Forest
+
+---
+
+### R Models
+
+Run the following scripts:
+
+```
+Song_Energy_Classifier.R
+Project SVM_NB.R
+```
+
+These scripts train:
+
+- KNN
+- SVM
+- Naive Bayes
+
+---
+
+# Applications
+
+This project can be used in:
+
+- Music recommendation systems
+- Automated playlist generation
+- Mood-based music classification
+- Audio feature analysis
+- Music streaming platforms
 
 ---
 
 # Authors
 
-**Rohan Swain**  
-University of Delaware  
+Rohan Swain  
+University of Delaware
 
-**Divyam Patel**  
-University of Delaware  
+Divyam Patel  
+University of Delaware
 
-**Vineet Kotian**  
-University of Delaware  
+Vineet Kotian  
+University of Delaware
 
 ---
 
-# References
+# Future Improvements
 
-- Spotify audio feature dataset (Kaggle)
-- Research on music energy prediction
-- Machine learning classification literature
+Potential improvements include:
+
+- Testing advanced models such as XGBoost or Neural Networks
+- Hyperparameter tuning for improved accuracy
+- Feature importance analysis
+- Building a web application for energy prediction
+- Integrating with the Spotify API for real-time predictions
